@@ -10,7 +10,10 @@ const schema = yup.object().shape({
   expiryMm: yup.string().required("Expiry month is required"),
   expiryYy: yup.string().required("Expiry year is required"),
   currency: yup.string().required("Currency is required"),
-  amount: yup.number().typeError("Amount must be a number").required("Amount is required"),
+  amount: yup
+    .number()
+    .typeError("Amount must be a number")
+    .required("Amount is required"),
   cardNumber: yup
     .string()
     .required("Card number is required")
@@ -31,9 +34,11 @@ const AddCard = () => {
   const [cardTypes, setCardTypes] = useState([]);
   const [currentYear] = useState(new Date().getFullYear());
 
-  useEffect(() => {
-    axios.get("/api/card-types").then((response) => setCardTypes(response.data));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("/api/card-types")
+  //     .then((response) => setCardTypes(response.data));
+  // }, []);
 
   const onSubmit = (data) => {
     axios.post("/card/create", data).then((response) => {
@@ -57,11 +62,13 @@ const AddCard = () => {
               <label className="form-label">Card Type</label>
               <select className="form-control" {...register("cardTypeId")}>
                 <option value="">Select Card Type</option>
-                {cardTypes.map((type) => (
+                {/* {cardTypes.map((type) => (
                   <option key={type.id} value={type.id}>
                     {type.cardTypeName}
                   </option>
-                ))}
+                ))} */}
+                <option>visa</option>
+                <option>Mastercard</option>
               </select>
               <p className="text-danger">{errors.cardTypeId?.message}</p>
             </div>
@@ -71,7 +78,9 @@ const AddCard = () => {
                 <label className="form-label">Expiry Month</label>
                 <select className="form-control" {...register("expiryMm")}>
                   {[...Array(12)].map((_, i) => (
-                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
                   ))}
                 </select>
                 <p className="text-danger">{errors.expiryMm?.message}</p>
@@ -80,7 +89,9 @@ const AddCard = () => {
                 <label className="form-label">Expiry Year</label>
                 <select className="form-control" {...register("expiryYy")}>
                   {[...Array(21)].map((_, i) => (
-                    <option key={i} value={currentYear - 10 + i}>{currentYear - 10 + i}</option>
+                    <option key={i} value={currentYear - 10 + i}>
+                      {currentYear - 10 + i}
+                    </option>
                   ))}
                 </select>
                 <p className="text-danger">{errors.expiryYy?.message}</p>
@@ -115,10 +126,16 @@ const AddCard = () => {
 
             <div className="mb-3">
               <label className="form-label">Notes</label>
-              <textarea className="form-control" rows="3" {...register("notes")} />
+              <textarea
+                className="form-control"
+                rows="3"
+                {...register("notes")}
+              />
             </div>
 
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
           </form>
         </div>
       </div>
